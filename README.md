@@ -14,7 +14,11 @@ go get -u github.com/leizongmin/autoexit
 autoexit v1.0 by Zongmin Lei <leizongmin@gmail.com> Copyright 2018
 Project: https://github.com/leizongmin/autoexit
 Usage:   autoexit <seconds> <command>
-Example: autoexit 3600 cmd arg1 arg2 ...
+Example:
+         autoexit 3600 cmd arg1 arg2 ...           # auto exit after 3600 seconds
+         autoexit 3600s cmd arg1 arg2 ...          # auto exit after 3600 seconds
+         autoexit 2d+3h+4m+5s cmd arg1 arg2 ...    # auto exit after 3 days and 3 hours and 4 minutes and 5 seconds
+
 ```
 
 ## License
