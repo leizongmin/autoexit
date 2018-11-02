@@ -2,7 +2,7 @@
 
 rm -rf release/*
 
-PACKAGE=main.go
+PACKAGE=github.com/leizongmin/autoexit
 RELEASE_PATH=release/autoexit
 
 CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o $RELEASE_PATH-darwin $PACKAGE
