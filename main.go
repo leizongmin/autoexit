@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"strconv"
 	"strings"
 	"time"
 )
@@ -16,9 +15,9 @@ func main() {
 		printUsage()
 		return
 	}
-	seconds, err := strconv.ParseInt(os.Args[1], 10, 64)
-	if err != nil {
-		fmt.Println("[autoexit] Invalid argument:", err)
+	seconds := parseTimeString(os.Args[1])
+	if seconds <= 0 {
+		fmt.Println("[autoexit] Invalid argument:", os.Args[1])
 		printUsage()
 		os.Exit(2)
 		return
@@ -29,9 +28,9 @@ func main() {
 	cmd.Stdin = os.Stdin
 	cmd.Env = os.Environ()
 	fmt.Println("[autoexit] Exec:", strings.Join(os.Args[2:], " "))
-	fmt.Printf("[autoexit] Automatic exit after %d seconds\n", seconds)
+	fmt.Printf("[autoexit] Automatic exit at %s\n", time.Now().Add(seconds).Format(time.RFC3339))
 
-	err = cmd.Start()
+	err := cmd.Start()
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(3)
@@ -40,7 +39,7 @@ func main() {
 	fmt.Println("[autoexit] Start process with PID:", cmd.Process.Pid)
 
 	go func() {
-		time.Sleep(time.Duration(seconds) * time.Second)
+		time.Sleep(seconds)
 		fmt.Println("[autoexit] It's the time to exit.")
 		err := cmd.Process.Kill()
 		if err != nil {
@@ -63,5 +62,8 @@ func printUsage() {
 	fmt.Printf("autoexit v%s by Zongmin Lei <leizongmin@gmail.com> Copyright 2018\n", version)
 	fmt.Println("Project: https://github.com/leizongmin/autoexit")
 	fmt.Println("Usage:   autoexit <seconds> <command>")
-	fmt.Println("Example: autoexit 3600 cmd arg1 arg2 ...")
+	fmt.Println("Example: ")
+	fmt.Println("         autoexit 3600 cmd arg1 arg2 ...           # auto exit after 3600 seconds")
+	fmt.Println("         autoexit 3600s cmd arg1 arg2 ...          # auto exit after 3600 seconds")
+	fmt.Println("         autoexit 2d+3h+4m+5s cmd arg1 arg2 ...    # auto exit after 3 days and 3 hours and 4 minutes and 5 seconds")
 }
