@@ -8,9 +8,12 @@ import (
 	"time"
 )
 
-const version = "1.0"
+const version = "1.1"
+
+var version_info = fmt.Sprintf("[autoexit] v%s by Zongmin Lei <leizongmin@gmail.com> Copyright 2018\n", version)
 
 func main() {
+	fmt.Printf(version_info)
 	if len(os.Args) < 3 {
 		printUsage()
 		return
@@ -37,10 +40,13 @@ func main() {
 		return
 	}
 	fmt.Println("[autoexit] Start process with PID:", cmd.Process.Pid)
+	fmt.Println("")
 
 	go func() {
 		time.Sleep(seconds)
+		fmt.Println("")
 		fmt.Println("[autoexit] It's the time to exit.")
+		fmt.Println("")
 		err := cmd.Process.Kill()
 		if err != nil {
 			fmt.Println(err)
@@ -50,16 +56,17 @@ func main() {
 
 	err = cmd.Wait()
 	if err != nil {
+		fmt.Println("")
 		fmt.Println("[autoexit] Process", err)
 		os.Exit(3)
 	} else {
+		fmt.Println("")
 		fmt.Println("[autoexit] Process finished with exit status 0")
 		os.Exit(1)
 	}
 }
 
 func printUsage() {
-	fmt.Printf("autoexit v%s by Zongmin Lei <leizongmin@gmail.com> Copyright 2018\n", version)
 	fmt.Println("Project: https://github.com/leizongmin/autoexit")
 	fmt.Println("Usage:   autoexit <seconds> <command>")
 	fmt.Println("Example: ")
